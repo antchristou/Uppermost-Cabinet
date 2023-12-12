@@ -1,17 +1,19 @@
 
 
 // Would need to change so input device is microphone input/audio interface, as desired
+
 /* s.boot;
 ServerOptions.devices;
 s.options.inDevice_("MacBook Pro Microphone");
 s.options.outDevice_("MacBook Pro Speakers");
 s.options.outDevice_("External Headphones");*/
 
+// BEWARE: this program expects MIC input so if you don't have headponhes or a mic setup will probably feedback horrifically!
+
 
 // buses for routing signals to various effects/outs
 
 (
-
 
 s.waitForBoot {
 
@@ -23,10 +25,15 @@ var liveRecord = false; // if true, code expects performer to play live, if fals
 
 var mainBuf = Buffer.alloc(s, s.sampleRate*35,1);
 var liveBuf = Buffer.alloc(s,s.sampleRate*3);
-var kalimbaBuf =  Buffer.readChannel(s,"/Users/antonischristou/Desktop/CHRISTOU_431-FINAL/CT_132_kalimba_loop_meditate_Bmaj.wav",channels:[0]); // kalimba sample for granular soundscape section from Splice.com
 
-var heldABuf =  Buffer.readChannel(s,"/Users/antonischristou/Desktop/CHRISTOU_431-FINAL/ideas 3.aif",channels:[0]);
-var ideasBuf = Buffer.readChannel(s,"/Users/antonischristou/Desktop/CHRISTOU_431-FINAL/ideas 1.aif",channels:[0]);
+var kalimbaPath = thisProcess.nowExecutingPath.dirname +/+ "/CT_132_kalimba_loop_meditate_Bmaj.wav";
+var heldPath = thisProcess.nowExecutingPath.dirname +/+ "/ideas 3.aif";
+var ideasPath = thisProcess.nowExecutingPath.dirname +/+ "/ideas 1.aif";
+
+var kalimbaBuf =  Buffer.readChannel(s,kalimbaPath,channels:[0]); // kalimba sample for granular soundscape section from Splice.com
+
+var heldABuf =  Buffer.readChannel(s,heldPath,channels:[0]);
+var ideasBuf = Buffer.readChannel(s,ideasPath,channels:[0]);
 
 
 // Following code is adapted from my own Homework 5 for using automata to generate polytonal chord progressions:
@@ -348,7 +355,6 @@ SynthDef(\infiniteHoldReverb, {
 ~ptrGrp = Group.after(~micGrp);
 ~recGrp = Group.after(~ptrGrp);
 ~granGrp = Group.after(~micGrp);
-
 
 
 ~micBus = Bus.audio(s,1);
